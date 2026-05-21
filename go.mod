@@ -1,4 +1,4 @@
-module gogrammy
+module github.com/zzisler/gogrammy
 
 go 1.25.7
 
