@@ -15,6 +15,15 @@ type PhotoParams struct {
 	ReplyMarkup [][]models.InlineKeyboardButton
 }
 
+type AudioParams struct {
+	Title     string
+	Performer string
+	Filename  string
+	FileID    string
+	TrackData []byte
+	CoverData []byte
+}
+
 func (c *Context) SendPhoto(chatID any, url string, params *PhotoParams) (*models.Message, error) {
 
 	p := &bot.SendPhotoParams{
@@ -41,20 +50,37 @@ func (c *Context) SendPhoto(chatID any, url string, params *PhotoParams) (*model
 	return msg, nil
 }
 
-func (c *Context) SendAudio(chatID any, filename, title, artist string, data, coverData []byte) (*models.Message, error) {
+func (c *Context) SendAudio(chatID any, params *AudioParams) (*models.Message, error) {
 
 	p := &bot.SendAudioParams{
-		ChatID:    chatID,
-		Title:     title,
-		Performer: artist,
-		Thumbnail: &models.InputFileUpload{
-			Filename: "cover.jpg",
-			Data:     bytes.NewReader(coverData),
-		},
-		Audio: &models.InputFileUpload{
-			Filename: filename,
-			Data:     bytes.NewReader(data),
-		},
+		ChatID: chatID,
+		// Title:     title,
+		// Performer: artist,
+		// Thumbnail: &models.InputFileUpload{
+		// 	Filename: "cover.jpg",
+		// 	Data:     bytes.NewReader(coverData),
+		// },
+		// Audio: &models.InputFileUpload{
+		// 	Filename: filename,
+		// 	Data:     bytes.NewReader(data),
+		// },
+	}
+
+	if params != nil {
+		p.Title = params.Title
+		p.Performer = params.Performer
+		if params.FileID != "" {
+			p.Audio = &models.InputFileString{Data: params.FileID}
+		} else {
+			p.Audio = &models.InputFileUpload{
+				Filename: params.Filename,
+				Data:     bytes.NewReader(params.TrackData),
+			}
+			p.Thumbnail = &models.InputFileUpload{
+				Filename: "cover.jpg",
+				Data:     bytes.NewReader(params.CoverData),
+			}
+		}
 	}
 
 	msg, err := c.Bot.SendAudio(c.Ctx, p)
