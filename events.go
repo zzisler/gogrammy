@@ -27,6 +27,10 @@ func (a *App) On(eventType string, h Handler) {
 		matchFunc = func(update *models.Update) bool {
 			return update.Message != nil
 		}
+	case "business_message":
+		matchFunc = func(update *models.Update) bool {
+			return update.BusinessMessage != nil
+		}
 	default:
 		matchFunc = func(update *models.Update) bool {
 			return true

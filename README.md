@@ -44,7 +44,7 @@ func main() {
 - `GroupCommand(cmd, handler)` — group/supergroup only
 
 ### Events
-- `On(eventType, handler)` — listen to events: `message`, `callback`, `join_request`, `my_chat_member`
+- `On(eventType, handler)` — listen to events: `message`, `callback`, `join_request`, `my_chat_member`, `business_message`
 - `OnCallback(prefix, handler)` — listen to callback with prefix
 
 ### Messages
