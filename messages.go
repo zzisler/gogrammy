@@ -24,7 +24,7 @@ func (c *Context) Send(chatID any, text string, params *MsgParams) (*models.Mess
 	}
 
 	if c.Update.BusinessMessage != nil {
-		p.BusinessConnectionID = c.Update.Message.BusinessConnectionID
+		p.BusinessConnectionID = c.Update.BusinessMessage.BusinessConnectionID
 	}
 
 	if params != nil {
@@ -35,8 +35,15 @@ func (c *Context) Send(chatID any, text string, params *MsgParams) (*models.Mess
 			}
 		}
 		if params.Reply {
-			p.ReplyParameters = &models.ReplyParameters{
-				MessageID: c.Update.Message.ID,
+
+			if c.Update.BusinessMessage != nil {
+				p.ReplyParameters = &models.ReplyParameters{
+					MessageID: c.Update.BusinessMessage.ID,
+				}
+			} else {
+				p.ReplyParameters = &models.ReplyParameters{
+					MessageID: c.Update.Message.ID,
+				}
 			}
 		}
 		if params.DisablePreview {
