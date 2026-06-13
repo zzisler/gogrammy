@@ -23,6 +23,10 @@ func (c *Context) Send(chatID any, text string, params *MsgParams) (*models.Mess
 		Text:   text,
 	}
 
+	if c.Update.BusinessMessage != nil {
+		p.BusinessConnectionID = c.Update.Message.BusinessConnectionID
+	}
+
 	if params != nil {
 		p.ParseMode = models.ParseMode(params.ParseMode)
 		if params.ReplyMarkup != nil {
