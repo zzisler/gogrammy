@@ -20,15 +20,51 @@ func (c *Client) On(eventType string, h Handler) {
 	var matchFunc bot.MatchFunc
 	switch eventType {
 	case "message":
-		matchFunc = func(update *models.Update) bool { return update.Message != nil }
+		matchFunc = func(u *models.Update) bool { return u.Message != nil }
+	case "edited_message":
+		matchFunc = func(u *models.Update) bool { return u.EditedMessage != nil }
+	case "channel_post":
+		matchFunc = func(u *models.Update) bool { return u.ChannelPost != nil }
+	case "edited_channel_post":
+		matchFunc = func(u *models.Update) bool { return u.EditedChannelPost != nil }
+	case "business_connection":
+		matchFunc = func(u *models.Update) bool { return u.BusinessConnection != nil }
+	case "business_message":
+		matchFunc = func(u *models.Update) bool { return u.BusinessMessage != nil }
+	case "edited_business_message":
+		matchFunc = func(u *models.Update) bool { return u.EditedBusinessMessage != nil }
+	case "deleted_business_message":
+		matchFunc = func(u *models.Update) bool { return u.DeletedBusinessMessages != nil }
+	case "message_reaction":
+		matchFunc = func(u *models.Update) bool { return u.MessageReaction != nil }
+	case "message_reaction_count":
+		matchFunc = func(u *models.Update) bool { return u.MessageReactionCount != nil }
+	case "inline_query":
+		matchFunc = func(u *models.Update) bool { return u.InlineQuery != nil }
+	case "chosen_inline_result":
+		matchFunc = func(u *models.Update) bool { return u.ChosenInlineResult != nil }
 	case "callback":
-		matchFunc = func(update *models.Update) bool { return update.CallbackQuery != nil }
-	case "join_request":
-		matchFunc = func(update *models.Update) bool { return update.ChatJoinRequest != nil }
+		matchFunc = func(u *models.Update) bool { return u.CallbackQuery != nil }
+	case "shipping_query":
+		matchFunc = func(u *models.Update) bool { return u.ShippingQuery != nil }
+	case "pre_checkout_query":
+		matchFunc = func(u *models.Update) bool { return u.PreCheckoutQuery != nil }
+	case "poll":
+		matchFunc = func(u *models.Update) bool { return u.Poll != nil }
+	case "poll_answer":
+		matchFunc = func(u *models.Update) bool { return u.PollAnswer != nil }
 	case "my_chat_member":
-		matchFunc = func(update *models.Update) bool { return update.MyChatMember != nil }
+		matchFunc = func(u *models.Update) bool { return u.MyChatMember != nil }
+	case "chat_member":
+		matchFunc = func(u *models.Update) bool { return u.ChatMember != nil }
+	case "join_request":
+		matchFunc = func(u *models.Update) bool { return u.ChatJoinRequest != nil }
+	case "chat_boost":
+		matchFunc = func(u *models.Update) bool { return u.ChatBoost != nil }
+	case "removed_chat_boost":
+		matchFunc = func(u *models.Update) bool { return u.RemovedChatBoost != nil }
 	default:
-		matchFunc = func(update *models.Update) bool { return true }
+		matchFunc = func(u *models.Update) bool { return true }
 	}
 	c.Bot.RegisterHandlerMatchFunc(matchFunc, c.handle(h))
 }
