@@ -50,26 +50,6 @@ func (b *AudioBuilder) FilePath(path string) *AudioBuilder {
 	return b
 }
 
-func (b *AudioBuilder) ThumbnailFileID(id string) *AudioBuilder {
-	b.thumbnail = &models.InputFileString{Data: id}
-	return b
-}
-
-func (b *AudioBuilder) ThumbnailFileURL(url string) *AudioBuilder {
-	b.thumbnail = &models.InputFileString{Data: url}
-	return b
-}
-
-func (b *AudioBuilder) ThumbnailFilePath(path string) *AudioBuilder {
-	data, err := os.ReadFile(path)
-	if err != nil {
-		b.err = err
-		return b
-	}
-	b.thumbnail = &models.InputFileUpload{Filename: filepath.Base(path), Data: bytes.NewReader(data)}
-	return b
-}
-
 func (b *AudioBuilder) Caption(caption string) *AudioBuilder {
 	b.caption = caption
 	return b
@@ -116,7 +96,6 @@ func (b *AudioBuilder) Do(ctx context.Context) (*models.Message, error) {
 	params := &bot.SendAudioParams{
 		ChatID:      b.userID,
 		Audio:       b.audio,
-		Thumbnail:   b.thumbnail,
 		Caption:     b.caption,
 		ParseMode:   b.parseMode,
 		ReplyMarkup: b.replyMarkup,

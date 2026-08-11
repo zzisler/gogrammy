@@ -15,7 +15,6 @@ type DocumentBuilder struct {
 	bot         *bot.Bot
 	userID      int64
 	document    models.InputFile
-	thumbnail   models.InputFile
 	caption     string
 	parseMode   models.ParseMode
 	replyMarkup models.ReplyMarkup
@@ -44,26 +43,6 @@ func (b *DocumentBuilder) FilePath(path string) *DocumentBuilder {
 		return b
 	}
 	b.document = &models.InputFileUpload{Filename: filepath.Base(path), Data: bytes.NewReader(data)}
-	return b
-}
-
-func (b *DocumentBuilder) ThumbnailFileID(id string) *DocumentBuilder {
-	b.thumbnail = &models.InputFileString{Data: id}
-	return b
-}
-
-func (b *DocumentBuilder) ThumbnailFileURL(url string) *DocumentBuilder {
-	b.thumbnail = &models.InputFileString{Data: url}
-	return b
-}
-
-func (b *DocumentBuilder) ThumbnailFilePath(path string) *DocumentBuilder {
-	data, err := os.ReadFile(path)
-	if err != nil {
-		b.err = err
-		return b
-	}
-	b.thumbnail = &models.InputFileUpload{Filename: filepath.Base(path), Data: bytes.NewReader(data)}
 	return b
 }
 
@@ -98,7 +77,6 @@ func (b *DocumentBuilder) Do(ctx context.Context) (*models.Message, error) {
 	params := &bot.SendDocumentParams{
 		ChatID:      b.userID,
 		Document:    b.document,
-		Thumbnail:   b.thumbnail,
 		Caption:     b.caption,
 		ParseMode:   b.parseMode,
 		ReplyMarkup: b.replyMarkup,
