@@ -106,3 +106,11 @@ func (c *Context) SendAudio(userID int64) *builder.AudioBuilder {
 func (c *Context) SendDocument(userID int64) *builder.DocumentBuilder {
 	return builder.NewDocumentBuilder(c.Bot, userID)
 }
+
+func (c *Context) SendVoice(userID int64) *builder.VoiceBuilder {
+	return builder.NewVoiceBuilder(c.Bot, userID)
+}
+
+func (c *Context) SendVideoNote(userID int64) *builder.VideoNoteBuilder {
+	return builder.NewVideoNoteBuilder(c.Bot, userID)
+}
