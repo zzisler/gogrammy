@@ -55,3 +55,7 @@ func New(token string, opts ...ClientOption) (*Client, error) {
 func (c *Client) SendText(userID int64, text string) *builder.TextBuilder {
 	return builder.NewTextBuilder(c.Bot, userID, text)
 }
+
+func (c *Client) EditText(userID int64, messageID int, text string) *builder.EditTextBuilder {
+	return builder.NewEditTextBuilder(c.Bot, userID, messageID, text)
+}
