@@ -24,3 +24,7 @@ func (c *Context) AnswerCallback() *builder.AnswerCallbackBuilder {
 func (c *Context) SendChatAction(userID int64, action models.ChatAction) *builder.ChatActionBuilder {
 	return builder.NewChatActionBuilder(c.Bot, userID, action)
 }
+
+func (c *Context) RemoveKeyboard() models.ReplyKeyboardRemove {
+	return models.ReplyKeyboardRemove{RemoveKeyboard: true}
+}
