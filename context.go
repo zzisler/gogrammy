@@ -98,3 +98,7 @@ func (c *Context) SendPhoto(userID int64) *builder.PhotoBuilder {
 func (c *Context) SendVideo(userID int64) *builder.VideoBuilder {
 	return builder.NewVideoBuilder(c.Bot, userID)
 }
+
+func (c *Context) SendAudio(userID int64) *builder.AudioBuilder {
+	return builder.NewAudioBuilder(c.Bot, userID)
+}
