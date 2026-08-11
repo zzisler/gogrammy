@@ -20,3 +20,7 @@ func (c *Context) UserID() int64 {
 func (c *Context) AnswerCallback() *builder.AnswerCallbackBuilder {
 	return builder.NewAnswerCallbackBuilder(c.Bot, c.Update.CallbackQuery.ID)
 }
+
+func (c *Context) SendChatAction(userID int64, action models.ChatAction) *builder.ChatActionBuilder {
+	return builder.NewChatActionBuilder(c.Bot, userID, action)
+}
