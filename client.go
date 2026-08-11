@@ -52,6 +52,10 @@ func New(token string, opts ...ClientOption) (*Client, error) {
 	return &Client{Bot: b, handlers: make(map[string]func(*Context))}, nil
 }
 
+func (c *Client) NewKeyboard() *builder.KeyboardBuilder {
+	return builder.NewKeyboard()
+}
+
 func (c *Client) SendText(userID int64, text string) *builder.TextBuilder {
 	return builder.NewTextBuilder(c.Bot, userID, text)
 }

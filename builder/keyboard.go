@@ -7,7 +7,7 @@ type KeyboardBuilder struct {
 	cur  []models.InlineKeyboardButton
 }
 
-func NewKeyBoard() *KeyboardBuilder {
+func NewKeyboard() *KeyboardBuilder {
 	return &KeyboardBuilder{}
 }
 
