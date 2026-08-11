@@ -2,16 +2,16 @@ package builder
 
 import "github.com/go-telegram/bot/models"
 
-type KeyboardBuilder struct {
+type InlineKeyboardBuilder struct {
 	rows [][]models.InlineKeyboardButton
 	cur  []models.InlineKeyboardButton
 }
 
-func NewKeyboard() *KeyboardBuilder {
-	return &KeyboardBuilder{}
+func NewInlineKeyboard() *InlineKeyboardBuilder {
+	return &InlineKeyboardBuilder{}
 }
 
-func (k *KeyboardBuilder) Text(text, callbackData string) *KeyboardBuilder {
+func (k *InlineKeyboardBuilder) Text(text, callbackData string) *InlineKeyboardBuilder {
 	k.cur = append(k.cur, models.InlineKeyboardButton{
 		Text:         text,
 		CallbackData: callbackData,
@@ -19,7 +19,7 @@ func (k *KeyboardBuilder) Text(text, callbackData string) *KeyboardBuilder {
 	return k
 }
 
-func (k *KeyboardBuilder) URL(text, url string) *KeyboardBuilder {
+func (k *InlineKeyboardBuilder) URL(text, url string) *InlineKeyboardBuilder {
 	k.cur = append(k.cur, models.InlineKeyboardButton{
 		Text: text,
 		URL:  url,
@@ -27,7 +27,7 @@ func (k *KeyboardBuilder) URL(text, url string) *KeyboardBuilder {
 	return k
 }
 
-func (k *KeyboardBuilder) Row() *KeyboardBuilder {
+func (k *InlineKeyboardBuilder) Row() *InlineKeyboardBuilder {
 	if len(k.cur) > 0 {
 		k.rows = append(k.rows, k.cur)
 		k.cur = nil
@@ -35,7 +35,7 @@ func (k *KeyboardBuilder) Row() *KeyboardBuilder {
 	return k
 }
 
-func (k *KeyboardBuilder) Build() models.InlineKeyboardMarkup {
+func (k *InlineKeyboardBuilder) Build() models.InlineKeyboardMarkup {
 	k.Row()
 	return models.InlineKeyboardMarkup{InlineKeyboard: k.rows}
 }

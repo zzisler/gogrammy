@@ -13,7 +13,7 @@ type TextBuilder struct {
 	text        string
 	parseMode   models.ParseMode
 	replyTo     int
-	replyMarkup models.InlineKeyboardMarkup
+	replyMarkup models.ReplyMarkup
 }
 
 func NewTextBuilder(b *bot.Bot, userID int64, text string) *TextBuilder {
@@ -30,7 +30,7 @@ func (b *TextBuilder) ReplyTo(messageID int) *TextBuilder {
 	return b
 }
 
-func (b *TextBuilder) ReplyMarkup(kb models.InlineKeyboardMarkup) *TextBuilder {
+func (b *TextBuilder) ReplyMarkup(kb models.ReplyMarkup) *TextBuilder {
 	b.replyMarkup = kb
 	return b
 }
