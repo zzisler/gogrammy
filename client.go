@@ -5,6 +5,7 @@ import (
 	"net/url"
 
 	"github.com/go-telegram/bot"
+	"github.com/go-telegram/bot/models"
 	"github.com/zzisler/gogrammy/builder"
 )
 
@@ -70,4 +71,12 @@ func (c *Client) EditText(userID int64, messageID int, text string) *builder.Edi
 
 func (c *Client) DeleteMessage(userID int64, messageID int) *builder.DeleteBuilder {
 	return builder.NewDeleteBuilder(c.Bot, userID, messageID)
+}
+
+func (c *Client) SendPhoto(userID int64) *builder.PhotoBuilder {
+	return builder.NewPhotoBuilder(c.Bot, userID)
+}
+
+func (c *Context) SendChatAction(userID int64, action models.ChatAction) *builder.ChatActionBuilder {
+	return builder.NewChatActionBuilder(c.Bot, userID, action)
 }
