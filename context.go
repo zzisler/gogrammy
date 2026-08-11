@@ -28,3 +28,7 @@ func (c *Context) SendChatAction(userID int64, action models.ChatAction) *builde
 func (c *Context) RemoveKeyboard() models.ReplyKeyboardRemove {
 	return models.ReplyKeyboardRemove{RemoveKeyboard: true}
 }
+
+func (c *Context) SendPhoto(userID int64) *builder.PhotoBuilder {
+	return builder.NewPhotoBuilder(c.Bot, userID)
+}
