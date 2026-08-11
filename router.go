@@ -10,13 +10,13 @@ import (
 
 type Handler func(*Context)
 
-func (c *Client) handle(h Handler) bot.HandlerFunc {
+func (c *Context) handle(h Handler) bot.HandlerFunc {
 	return func(ctx context.Context, b *bot.Bot, update *models.Update) {
-		h(&Context{Client: c, Update: update, Ctx: ctx})
+		h(&Context{Bot: b, Update: update, Ctx: ctx})
 	}
 }
 
-func (c *Client) On(eventType string, h Handler) {
+func (c *Context) On(eventType string, h Handler) {
 	var matchFunc bot.MatchFunc
 	switch eventType {
 	case "message":
@@ -69,18 +69,18 @@ func (c *Client) On(eventType string, h Handler) {
 	c.Bot.RegisterHandlerMatchFunc(matchFunc, c.handle(h))
 }
 
-func (c *Client) OnCallback(prefix string, h Handler) {
+func (c *Context) OnCallback(prefix string, h Handler) {
 	c.Bot.RegisterHandlerMatchFunc(func(update *models.Update) bool {
 		return update.CallbackQuery != nil && strings.HasPrefix(update.CallbackQuery.Data, prefix)
 	}, c.handle(h))
 }
 
-func (c *Client) Command(cmd string, h Handler) {
+func (c *Context) Command(cmd string, h Handler) {
 	c.Bot.RegisterHandlerMatchFunc(func(update *models.Update) bool {
 		return update.Message != nil && update.Message.Text == cmd
 	}, c.handle(h))
 }
 
-func (c *Client) Start(ctx context.Context) {
+func (c *Context) Start(ctx context.Context) {
 	c.Bot.Start(ctx)
 }

@@ -10,13 +10,8 @@ import (
 	"github.com/zzisler/gogrammy/builder"
 )
 
-type Client struct {
-	Bot      *bot.Bot
-	handlers map[string]func(*Context)
-}
-
 type Context struct {
-	*Client
+	Bot    *bot.Bot
 	Update *models.Update
 	Ctx    context.Context
 }
@@ -33,7 +28,7 @@ func WithProxy(proxyURL string) ClientOption {
 	}
 }
 
-func New(token string, opts ...ClientOption) (*Client, error) {
+func New(token string, opts ...ClientOption) (*Context, error) {
 	cfg := &clientConfig{}
 	for _, opt := range opts {
 		opt(cfg)
@@ -57,7 +52,7 @@ func New(token string, opts ...ClientOption) (*Client, error) {
 		return nil, err
 	}
 
-	return &Client{Bot: b, handlers: make(map[string]func(*Context))}, nil
+	return &Context{Bot: b}, nil
 }
 
 func (c *Context) UserID() int64 {
