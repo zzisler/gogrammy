@@ -59,3 +59,7 @@ func (c *Client) SendText(userID int64, text string) *builder.TextBuilder {
 func (c *Client) EditText(userID int64, messageID int, text string) *builder.EditTextBuilder {
 	return builder.NewEditTextBuilder(c.Bot, userID, messageID, text)
 }
+
+func (c *Client) DeleteMessage(userID int64, messageID int) *builder.DeleteBuilder {
+	return builder.NewDeleteBuilder(c.Bot, userID, messageID)
+}
