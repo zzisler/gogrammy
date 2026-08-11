@@ -114,3 +114,11 @@ func (c *Context) SendVoice(userID int64) *builder.VoiceBuilder {
 func (c *Context) SendVideoNote(userID int64) *builder.VideoNoteBuilder {
 	return builder.NewVideoNoteBuilder(c.Bot, userID)
 }
+
+func (c *Context) EditCaption(userID int64, messageID int, caption string) *builder.EditCaptionBuilder {
+	return builder.NewEditCaptionBuilder(c.Bot, userID, messageID, caption)
+}
+
+func (c *Context) EditMessageMedia(userID int64, messageID int) *builder.EditMediaBuilder {
+	return builder.NewEditMediaBuilder(c.Bot, userID, messageID)
+}
