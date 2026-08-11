@@ -1,6 +1,7 @@
 package gogrammy
 
 import (
+	"context"
 	"net/http"
 	"net/url"
 
@@ -12,6 +13,12 @@ import (
 type Client struct {
 	Bot      *bot.Bot
 	handlers map[string]func(*Context)
+}
+
+type Context struct {
+	*Client
+	Update *models.Update
+	Ctx    context.Context
 }
 
 type ClientOption func(*clientConfig)
@@ -53,30 +60,42 @@ func New(token string, opts ...ClientOption) (*Client, error) {
 	return &Client{Bot: b, handlers: make(map[string]func(*Context))}, nil
 }
 
-func (c *Client) NewInlineKeyboard() *builder.InlineKeyboardBuilder {
+func (c *Context) UserID() int64 {
+	return c.Update.Message.From.ID
+}
+
+func (c *Context) AnswerCallback() *builder.AnswerCallbackBuilder {
+	return builder.NewAnswerCallbackBuilder(c.Bot, c.Update.CallbackQuery.ID)
+}
+
+func (c *Context) NewInlineKeyboard() *builder.InlineKeyboardBuilder {
 	return builder.NewInlineKeyboard()
 }
 
-func (c *Client) NewReplyKeyboard() *builder.ReplyKeyboardBuilder {
+func (c *Context) NewReplyKeyboard() *builder.ReplyKeyboardBuilder {
 	return builder.NewReplyKeyboard()
 }
 
-func (c *Client) SendText(userID int64, text string) *builder.TextBuilder {
-	return builder.NewTextBuilder(c.Bot, userID, text)
-}
-
-func (c *Client) EditText(userID int64, messageID int, text string) *builder.EditTextBuilder {
-	return builder.NewEditTextBuilder(c.Bot, userID, messageID, text)
-}
-
-func (c *Client) DeleteMessage(userID int64, messageID int) *builder.DeleteBuilder {
-	return builder.NewDeleteBuilder(c.Bot, userID, messageID)
-}
-
-func (c *Client) SendPhoto(userID int64) *builder.PhotoBuilder {
-	return builder.NewPhotoBuilder(c.Bot, userID)
+func (c *Context) RemoveKeyboard() models.ReplyKeyboardRemove {
+	return models.ReplyKeyboardRemove{RemoveKeyboard: true}
 }
 
 func (c *Context) SendChatAction(userID int64, action models.ChatAction) *builder.ChatActionBuilder {
 	return builder.NewChatActionBuilder(c.Bot, userID, action)
+}
+
+func (c *Context) SendText(userID int64, text string) *builder.TextBuilder {
+	return builder.NewTextBuilder(c.Bot, userID, text)
+}
+
+func (c *Context) EditText(userID int64, messageID int, text string) *builder.EditTextBuilder {
+	return builder.NewEditTextBuilder(c.Bot, userID, messageID, text)
+}
+
+func (c *Context) DeleteMessage(userID int64, messageID int) *builder.DeleteBuilder {
+	return builder.NewDeleteBuilder(c.Bot, userID, messageID)
+}
+
+func (c *Context) SendPhoto(userID int64) *builder.PhotoBuilder {
+	return builder.NewPhotoBuilder(c.Bot, userID)
 }
