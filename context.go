@@ -94,3 +94,7 @@ func (c *Context) DeleteMessage(userID int64, messageID int) *builder.DeleteBuil
 func (c *Context) SendPhoto(userID int64) *builder.PhotoBuilder {
 	return builder.NewPhotoBuilder(c.Bot, userID)
 }
+
+func (c *Context) SendVideo(userID int64) *builder.VideoBuilder {
+	return builder.NewVideoBuilder(c.Bot, userID)
+}
