@@ -41,5 +41,8 @@ func (b *TextBuilder) Do(ctx context.Context) (*models.Message, error) {
 		Text:        b.text,
 		ParseMode:   b.parseMode,
 		ReplyMarkup: b.replyMarkup,
+		ReplyParameters: &models.ReplyParameters{
+			MessageID: b.replyTo,
+		},
 	})
 }
