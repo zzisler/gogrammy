@@ -38,7 +38,7 @@ ctx.SendText(userID, "Hello!").
 ## Install
 
 ```bash
-go get github.com/zzisler/gogrammy
+go get github.com/zzisler/gogrammy@latest
 ```
 
 ## Quick start
