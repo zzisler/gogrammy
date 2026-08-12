@@ -87,6 +87,21 @@ func (k *ReplyKeyboardBuilder) Text(text string) *ReplyKeyboardBuilder {
 	return k
 }
 
+func (k *ReplyKeyboardBuilder) Style(styleType string) *ReplyKeyboardBuilder {
+	lastIndex := len(k.cur) - 1
+	if lastIndex >= 0 {
+		switch styleType {
+		case "red":
+			k.cur[lastIndex].Style = "danger"
+		case "green":
+			k.cur[lastIndex].Style = "success"
+		case "blue":
+			k.cur[lastIndex].Style = "primary"
+		}
+	}
+	return k
+}
+
 func (k *ReplyKeyboardBuilder) Row() *ReplyKeyboardBuilder {
 	if len(k.cur) > 0 {
 		k.rows = append(k.rows, k.cur)
