@@ -8,6 +8,41 @@
 
 ---
 
+# API Reference
+
+## Содержание
+- [Отправка сообщений](#отправка-сообщений)
+  - [SendText](#sendtext)
+  - [SendPhoto](#sendphoto)
+  - [SendVideo](#sendvideo)
+  - [SendAudio](#sendaudio)
+  - [SendDocument](#senddocument)
+  - [SendVoice](#sendvoice)
+  - [SendVideoNote](#sendvideonote)
+- [Редактирование](#редактирование)
+  - [EditText](#edittext)
+  - [EditCaption](#editcaption)
+  - [EditMessageMedia](#editmessagemedia)
+- [Удаление](#удаление)
+  - [DeleteMessage](#deletemessage)
+- [Клавиатуры](#клавиатуры)
+  - [NewInlineKeyboard](#newinlinekeyboard)
+  - [NewReplyKeyboard](#newreplykeyboard)
+  - [RemoveKeyboard](#removekeyboard)
+- [Заявки на вступление](#заявки-на-вступление)
+  - [ApproveJoin](#approvejoin)
+  - [DeclineJoin](#declinejoin)
+- [Прочее](#прочее)
+  - [AnswerCallback](#answercallback)
+  - [SendChatAction](#sendchataction)
+- [Роутинг](#роутинг)
+  - [Command](#command)
+  - [On](#on)
+  - [OnCallback](#oncallback)
+  - [Start](#start)
+
+---
+
 ## Отправка сообщений
 
 ### SendText
@@ -31,6 +66,8 @@ msg, err := ctx.SendText(userID, "Привет!").
     ReplyMarkup(inlineKeyboard).
     Do(ctx.Ctx)
 ```
+
+[Наверх](#api-reference)
 
 ---
 
@@ -74,6 +111,8 @@ msg, err := ctx.SendPhoto(userID).
     FilePath("/tmp/photo.jpg").
     Do(ctx.Ctx)
 ```
+
+[Наверх](#api-reference)
 
 ---
 
@@ -121,6 +160,8 @@ msg, err := ctx.SendVideo(userID).
     FilePath("/tmp/video.mp4").
     Do(ctx.Ctx)
 ```
+
+[Наверх](#api-reference)
 
 ---
 
@@ -171,6 +212,8 @@ msg, err := ctx.SendAudio(userID).
     Do(ctx.Ctx)
 ```
 
+[Наверх](#api-reference)
+
 ---
 
 ### SendDocument
@@ -213,6 +256,8 @@ msg, err := ctx.SendDocument(userID).
     FilePath("/tmp/doc.pdf").
     Do(ctx.Ctx)
 ```
+
+[Наверх](#api-reference)
 
 ---
 
@@ -259,6 +304,8 @@ msg, err := ctx.SendVoice(userID).
     Do(ctx.Ctx)
 ```
 
+[Наверх](#api-reference)
+
 ---
 
 ### SendVideoNote
@@ -302,6 +349,10 @@ msg, err := ctx.SendVideoNote(userID).
     Do(ctx.Ctx)
 ```
 
+[Наверх](#api-reference)
+
+</details>
+
 ---
 
 ## Редактирование
@@ -326,6 +377,8 @@ msg, err := ctx.EditText(userID, messageID, "Новый текст").
     Do(ctx.Ctx)
 ```
 
+[Наверх](#api-reference)
+
 ---
 
 ### EditCaption
@@ -347,6 +400,8 @@ msg, err := ctx.EditCaption(userID, messageID, "Новая подпись").
     ReplyMarkup(newKeyboard).
     Do(ctx.Ctx)
 ```
+
+[Наверх](#api-reference)
 
 ---
 
@@ -394,6 +449,8 @@ msg, err := ctx.EditMessageMedia(userID, messageID).
     Do(ctx.Ctx)
 ```
 
+[Наверх](#api-reference)
+
 ---
 
 ## Удаление
@@ -413,6 +470,8 @@ msg, err := ctx.EditMessageMedia(userID, messageID).
 ok, err := ctx.DeleteMessage(userID, messageID).
     Do(ctx.Ctx)
 ```
+
+[Наверх](#api-reference)
 
 ---
 
@@ -442,6 +501,8 @@ kb := ctx.NewInlineKeyboard().
 
 // Затем kb можно передать в .ReplyMarkup(kb) любого билдера
 ```
+
+[Наверх](#api-reference)
 
 ---
 
@@ -473,6 +534,8 @@ kb := ctx.NewReplyKeyboard().
 // Затем kb можно передать в .ReplyMarkup(kb) любого билдера
 ```
 
+[Наверх](#api-reference)
+
 ---
 
 ### RemoveKeyboard
@@ -488,6 +551,8 @@ msg, err := ctx.SendText(userID, "Клавиатура скрыта").
     ReplyMarkup(ctx.RemoveKeyboard()).
     Do(ctx.Ctx)
 ```
+
+[Наверх](#api-reference)
 
 ---
 
@@ -508,6 +573,8 @@ msg, err := ctx.SendText(userID, "Клавиатура скрыта").
 ctx.ApproveJoin(chatID, userID).Do(ctx.Ctx)
 ```
 
+[Наверх](#api-reference)
+
 ---
 
 ### DeclineJoin
@@ -524,6 +591,8 @@ ctx.ApproveJoin(chatID, userID).Do(ctx.Ctx)
 ```go
 ctx.DeclineJoin(chatID, userID).Do(ctx.Ctx)
 ```
+
+[Наверх](#api-reference)
 
 ---
 
@@ -545,6 +614,8 @@ ctx.SendChatAction(userID, models.ChatActionTyping).Do(ctx.Ctx)
 ```
 
 Статус действия виден пользователю ограниченное время (около 5 секунд), затем гаснет сам.
+
+[Наверх](#api-reference)
 
 ---
 
@@ -572,6 +643,8 @@ ctx.AnswerCallback().Text("Готово!").Do(ctx.Ctx)
 ctx.AnswerCallback().Text("Ошибка!").ShowAlert().Do(ctx.Ctx)
 ```
 
+[Наверх](#api-reference)
+
 ---
 
 ## Роутинг
@@ -590,6 +663,8 @@ b.Command("/start", func(ctx *gogrammy.Context) {
 })
 ```
 
+[Наверх](#api-reference)
+
 ---
 
 ### On
@@ -605,6 +680,8 @@ b.On("callback", func(ctx *gogrammy.Context) {
     // ...
 })
 ```
+
+[Наверх](#api-reference)
 
 ---
 
@@ -622,6 +699,8 @@ b.OnCallback("product_", func(ctx *gogrammy.Context) {
 })
 ```
 
+[Наверх](#api-reference)
+
 ---
 
 ### Start
@@ -634,3 +713,5 @@ b.OnCallback("product_", func(ctx *gogrammy.Context) {
 ```go
 b.Start(context.Background())
 ```
+
+[Наверх](#api-reference)
