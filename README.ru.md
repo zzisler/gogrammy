@@ -96,6 +96,8 @@ ctx.SendPhoto(userID).FilePath("./photo.png") // загрузка с диска
 
 ## Клавиатуры
 
+Inline-клавиатура — привязана к конкретному сообщению, при нажатии присылает `callback_query`:
+
 ```go
 kb := ctx.NewInlineKeyboard().
     Text("Кнопка 1", "btn1").
@@ -104,6 +106,25 @@ kb := ctx.NewInlineKeyboard().
     Build()
 
 ctx.SendText(userID, "Выбери:").ReplyMarkup(kb).Do(ctx.Ctx)
+```
+
+Reply-клавиатура — заменяет системную клавиатуру пользователя, нажатия приходят как обычные текстовые сообщения:
+
+```go
+kb := ctx.NewReplyKeyboard().
+    Text("Меню").
+    Row().
+    Text("Помощь").
+    Resize().
+    Build()
+
+ctx.SendText(userID, "Выбери:").ReplyMarkup(kb).Do(ctx.Ctx)
+```
+
+Снять reply-клавиатуру:
+
+```go
+ctx.SendText(userID, "Клавиатура убрана").ReplyMarkup(ctx.RemoveKeyboard()).Do(ctx.Ctx)
 ```
 
 ## Статус проекта

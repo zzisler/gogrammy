@@ -96,6 +96,8 @@ ctx.SendPhoto(userID).FilePath("./photo.png") // upload from disk
 
 ## Keyboards
 
+Inline keyboard — attached to a specific message, sends a `callback_query` on tap:
+
 ```go
 kb := ctx.NewInlineKeyboard().
     Text("Button 1", "btn1").
@@ -104,6 +106,25 @@ kb := ctx.NewInlineKeyboard().
     Build()
 
 ctx.SendText(userID, "Choose:").ReplyMarkup(kb).Do(ctx.Ctx)
+```
+
+Reply keyboard — replaces the user's system keyboard, taps come back as regular text messages:
+
+```go
+kb := ctx.NewReplyKeyboard().
+    Text("Menu").
+    Row().
+    Text("Help").
+    Resize().
+    Build()
+
+ctx.SendText(userID, "Choose:").ReplyMarkup(kb).Do(ctx.Ctx)
+```
+
+Removing a reply keyboard:
+
+```go
+ctx.SendText(userID, "Keyboard removed").ReplyMarkup(ctx.RemoveKeyboard()).Do(ctx.Ctx)
 ```
 
 ## Status
