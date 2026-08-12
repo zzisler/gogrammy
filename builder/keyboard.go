@@ -13,6 +13,7 @@ func NewInlineKeyboard() *InlineKeyboardBuilder {
 	return &InlineKeyboardBuilder{}
 }
 
+// func (k *InlineKeyboardBuilder) Text(text, callbackData string) *ButtonStyler {
 func (k *InlineKeyboardBuilder) Text(text, callbackData string) *InlineKeyboardBuilder {
 	k.cur = append(k.cur, models.InlineKeyboardButton{
 		Text:         text,
@@ -21,10 +22,35 @@ func (k *InlineKeyboardBuilder) Text(text, callbackData string) *InlineKeyboardB
 	return k
 }
 
+func (k *InlineKeyboardBuilder) Style(styleType string) *InlineKeyboardBuilder {
+	lastIndex := len(k.cur) - 1
+	if lastIndex >= 0 {
+		switch styleType {
+		case "red":
+			k.cur[lastIndex].Style = "danger"
+		case "green":
+			k.cur[lastIndex].Style = "success"
+		case "blue":
+			k.cur[lastIndex].Style = "primary"
+		}
+	}
+	return k
+}
+
 func (k *InlineKeyboardBuilder) URL(text, url string) *InlineKeyboardBuilder {
 	k.cur = append(k.cur, models.InlineKeyboardButton{
 		Text: text,
 		URL:  url,
+	})
+	return k
+}
+
+func (k *InlineKeyboardBuilder) Copy(text, copyText string) *InlineKeyboardBuilder {
+	k.cur = append(k.cur, models.InlineKeyboardButton{
+		Text: text,
+		CopyText: &models.CopyTextButton{
+			Text: copyText,
+		},
 	})
 	return k
 }
