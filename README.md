@@ -1,8 +1,8 @@
 <div align="center">
 
-**English** · [Русский](README.ru.md)
+**English** · [Русский](docs/ru/README.ru.md)
 
-[API Reference](./API.md) · [Examples](./examples)
+**Docs:** [API Reference](./API.md) · [API-справочник (RU)](docs/ru/API.ru.md) · [Examples](./examples)
 
 </div>
 

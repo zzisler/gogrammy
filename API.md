@@ -1,8 +1,8 @@
 <div align="center">
 
-[English](./README.md) · [Русский](./README.ru.md)
+**English** · [Русский](docs/ru/API.ru.md)
 
-**API Reference** · [Examples](./examples)
+**Docs:** [README](./README.md) · [README (RU)](docs/ru/README.ru.md) · [Examples](./examples)
 
 </div>
 
@@ -10,8 +10,8 @@
 
 # API Reference
 
-## Содержание
-- [Отправка сообщений](#отправка-сообщений)
+## Contents
+- [Sending messages](#sending-messages)
   - [SendText](#sendtext)
   - [SendPhoto](#sendphoto)
   - [SendVideo](#sendvideo)
@@ -19,23 +19,23 @@
   - [SendDocument](#senddocument)
   - [SendVoice](#sendvoice)
   - [SendVideoNote](#sendvideonote)
-- [Редактирование](#редактирование)
+- [Editing](#editing)
   - [EditText](#edittext)
   - [EditCaption](#editcaption)
   - [EditMessageMedia](#editmessagemedia)
-- [Удаление](#удаление)
+- [Deleting](#deleting)
   - [DeleteMessage](#deletemessage)
-- [Клавиатуры](#клавиатуры)
+- [Keyboards](#keyboards)
   - [NewInlineKeyboard](#newinlinekeyboard)
   - [NewReplyKeyboard](#newreplykeyboard)
   - [RemoveKeyboard](#removekeyboard)
-- [Заявки на вступление](#заявки-на-вступление)
+- [Join requests](#join-requests)
   - [ApproveJoin](#approvejoin)
   - [DeclineJoin](#declinejoin)
-- [Прочее](#прочее)
+- [Miscellaneous](#miscellaneous)
   - [AnswerCallback](#answercallback)
   - [SendChatAction](#sendchataction)
-- [Роутинг](#роутинг)
+- [Routing](#routing)
   - [Command](#command)
   - [On](#on)
   - [OnCallback](#oncallback)
@@ -43,22 +43,22 @@
 
 ---
 
-## Отправка сообщений
+## Sending messages
 
 ### SendText
 
 `ctx.SendText(userID int64, text string)` -> `*TextBuilder`
 
-Создаёт билдер для отправки текстового сообщения.
+Creates a builder for sending a text message.
 
-| Метод | Обязательный | Описание |
+| Method | Required | Description |
 |---|---|---|
-| `.ParseMode(mode models.ParseMode)` | нет | Устанавливает режим парсинга (HTML, Markdown и т.п.) |
-| `.ReplyTo(messageID int)` | нет | Указывает ID сообщения, на которое нужно ответить |
-| `.ReplyMarkup(kb models.ReplyMarkup)` | нет | Добавляет клавиатуру или inline-разметку |
-| `.Do(ctx context.Context)` | — | Отправляет сообщение. Возвращает `(*models.Message, error)` |
+| `.ParseMode(mode models.ParseMode)` | no | Sets the parsing mode (HTML, Markdown, etc.) |
+| `.ReplyTo(messageID int)` | no | Specifies the ID of the message to reply to |
+| `.ReplyMarkup(kb models.ReplyMarkup)` | no | Adds a keyboard or inline markup |
+| `.Do(ctx context.Context)` | — | Sends the message. Returns `(*models.Message, error)` |
 
-**Пример:**
+**Example:**
 ```go
 msg, err := ctx.SendText(userID, "Привет!").
     ParseMode(models.ModeHTML).
@@ -67,7 +67,7 @@ msg, err := ctx.SendText(userID, "Привет!").
     Do(ctx.Ctx)
 ```
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
 
 ---
 
@@ -75,24 +75,24 @@ msg, err := ctx.SendText(userID, "Привет!").
 
 `ctx.SendPhoto(userID int64)` -> `*PhotoBuilder`
 
-Создаёт билдер для отправки фотографии.
+Creates a builder for sending a photo.
 
-| Метод | Обязательный | Описание |
+| Method | Required | Description |
 |---|---|---|
-| `.FileID(id string)` | да* | Задаёт фото по file_id |
-| `.FileURL(url string)` | да* | Задаёт фото по URL |
-| `.FilePath(path string)` | да* | Задаёт фото по локальному пути (читает файл) |
-| `.Caption(caption string)` | нет | Устанавливает подпись к фото |
-| `.ParseMode(mode models.ParseMode)` | нет | Устанавливает режим парсинга для подписи |
-| `.ReplyMarkup(kb models.ReplyMarkup)` | нет | Добавляет клавиатуру или inline-разметку |
-| `.ReplyTo(messageID int)` | нет | Указывает ID сообщения, на которое нужно ответить |
-| `.Do(ctx context.Context)` | — | Отправляет фото. Возвращает `(*models.Message, error)` |
+| `.FileID(id string)` | yes* | Sets the photo by file_id |
+| `.FileURL(url string)` | yes* | Sets the photo by URL |
+| `.FilePath(path string)` | yes* | Sets the photo by local path (reads the file) |
+| `.Caption(caption string)` | no | Sets the photo caption |
+| `.ParseMode(mode models.ParseMode)` | no | Sets the parsing mode for the caption |
+| `.ReplyMarkup(kb models.ReplyMarkup)` | no | Adds a keyboard or inline markup |
+| `.ReplyTo(messageID int)` | no | Specifies the ID of the message to reply to |
+| `.Do(ctx context.Context)` | — | Sends the photo. Returns `(*models.Message, error)` |
 
-> *Обязательно вызвать ровно один из трёх способов задания источника фото, иначе `.Do()` вернёт ошибку.
+> *Exactly one of the three methods for specifying the photo source must be called, otherwise `.Do()` will return an error.
 
-**Пример:**
+**Example:**
 ```go
-// через FileID
+// via FileID
 msg, err := ctx.SendPhoto(userID).
     FileID("AgACAgIAAxkD...").
     Caption("Подпись").
@@ -101,18 +101,18 @@ msg, err := ctx.SendPhoto(userID).
     ReplyMarkup(inlineKeyboard).
     Do(ctx.Ctx)
 
-// через FileURL
+// via FileURL
 msg, err := ctx.SendPhoto(userID).
     FileURL("https://example.com/photo.jpg").
     Do(ctx.Ctx)
 
-// через FilePath
+// via FilePath
 msg, err := ctx.SendPhoto(userID).
     FilePath("/tmp/photo.jpg").
     Do(ctx.Ctx)
 ```
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
 
 ---
 
@@ -120,26 +120,26 @@ msg, err := ctx.SendPhoto(userID).
 
 `ctx.SendVideo(userID int64)` -> `*VideoBuilder`
 
-Создаёт билдер для отправки видео.
+Creates a builder for sending a video.
 
-| Метод | Обязательный | Описание |
+| Method | Required | Description |
 |---|---|---|
-| `.FileID(id string)` | да* | Задаёт видео по file_id |
-| `.FileURL(url string)` | да* | Задаёт видео по URL |
-| `.FilePath(path string)` | да* | Задаёт видео по локальному пути (читает файл) |
-| `.Caption(caption string)` | нет | Устанавливает подпись к видео |
-| `.ParseMode(mode models.ParseMode)` | нет | Устанавливает режим парсинга для подписи |
-| `.ReplyMarkup(kb models.ReplyMarkup)` | нет | Добавляет клавиатуру или inline-разметку |
-| `.ReplyTo(messageID int)` | нет | Указывает ID сообщения, на которое нужно ответить |
-| `.Duration(seconds int)` | нет | Устанавливает длительность видео в секундах |
-| `.Size(width, height int)` | нет | Устанавливает размеры видео (ширина, высота) |
-| `.Do(ctx context.Context)` | — | Отправляет видео. Возвращает `(*models.Message, error)` |
+| `.FileID(id string)` | yes* | Sets the video by file_id |
+| `.FileURL(url string)` | yes* | Sets the video by URL |
+| `.FilePath(path string)` | yes* | Sets the video by local path (reads the file) |
+| `.Caption(caption string)` | no | Sets the video caption |
+| `.ParseMode(mode models.ParseMode)` | no | Sets the parsing mode for the caption |
+| `.ReplyMarkup(kb models.ReplyMarkup)` | no | Adds a keyboard or inline markup |
+| `.ReplyTo(messageID int)` | no | Specifies the ID of the message to reply to |
+| `.Duration(seconds int)` | no | Sets the video duration in seconds |
+| `.Size(width, height int)` | no | Sets the video dimensions (width, height) |
+| `.Do(ctx context.Context)` | — | Sends the video. Returns `(*models.Message, error)` |
 
-> *Обязательно вызвать ровно один из трёх способов задания источника видео, иначе `.Do()` вернёт ошибку.
+> *Exactly one of the three methods for specifying the video source must be called, otherwise `.Do()` will return an error.
 
-**Пример:**
+**Example:**
 ```go
-// через FileID
+// via FileID
 msg, err := ctx.SendVideo(userID).
     FileID("BAACAgIAAxkD...").
     Caption("Подпись").
@@ -150,18 +150,18 @@ msg, err := ctx.SendVideo(userID).
     ReplyMarkup(inlineKeyboard).
     Do(ctx.Ctx)
 
-// через FileURL
+// via FileURL
 msg, err := ctx.SendVideo(userID).
     FileURL("https://example.com/video.mp4").
     Do(ctx.Ctx)
 
-// через FilePath
+// via FilePath
 msg, err := ctx.SendVideo(userID).
     FilePath("/tmp/video.mp4").
     Do(ctx.Ctx)
 ```
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
 
 ---
 
@@ -169,27 +169,27 @@ msg, err := ctx.SendVideo(userID).
 
 `ctx.SendAudio(userID int64)` -> `*AudioBuilder`
 
-Создаёт билдер для отправки аудио.
+Creates a builder for sending audio.
 
-| Метод | Обязательный | Описание |
+| Method | Required | Description |
 |---|---|---|
-| `.FileID(id string)` | да* | Задаёт аудио по file_id |
-| `.FileURL(url string)` | да* | Задаёт аудио по URL |
-| `.FilePath(path string)` | да* | Задаёт аудио по локальному пути (читает файл) |
-| `.Caption(caption string)` | нет | Устанавливает подпись к аудио |
-| `.ParseMode(mode models.ParseMode)` | нет | Устанавливает режим парсинга для подписи |
-| `.ReplyMarkup(kb models.ReplyMarkup)` | нет | Добавляет клавиатуру или inline-разметку |
-| `.ReplyTo(messageID int)` | нет | Указывает ID сообщения, на которое нужно ответить |
-| `.Duration(seconds int)` | нет | Устанавливает длительность аудио в секундах |
-| `.Performer(performer string)` | нет | Устанавливает имя исполнителя |
-| `.Title(title string)` | нет | Устанавливает название трека |
-| `.Do(ctx context.Context)` | — | Отправляет аудио. Возвращает `(*models.Message, error)` |
+| `.FileID(id string)` | yes* | Sets the audio by file_id |
+| `.FileURL(url string)` | yes* | Sets the audio by URL |
+| `.FilePath(path string)` | yes* | Sets the audio by local path (reads the file) |
+| `.Caption(caption string)` | no | Sets the audio caption |
+| `.ParseMode(mode models.ParseMode)` | no | Sets the parsing mode for the caption |
+| `.ReplyMarkup(kb models.ReplyMarkup)` | no | Adds a keyboard or inline markup |
+| `.ReplyTo(messageID int)` | no | Specifies the ID of the message to reply to |
+| `.Duration(seconds int)` | no | Sets the audio duration in seconds |
+| `.Performer(performer string)` | no | Sets the performer name |
+| `.Title(title string)` | no | Sets the track title |
+| `.Do(ctx context.Context)` | — | Sends the audio. Returns `(*models.Message, error)` |
 
-> *Обязательно вызвать ровно один из трёх способов задания источника аудио, иначе `.Do()` вернёт ошибку.
+> *Exactly one of the three methods for specifying the audio source must be called, otherwise `.Do()` will return an error.
 
-**Пример:**
+**Example:**
 ```go
-// через FileID
+// via FileID
 msg, err := ctx.SendAudio(userID).
     FileID("CQACAgIAAxkD...").
     Caption("Подпись").
@@ -201,18 +201,18 @@ msg, err := ctx.SendAudio(userID).
     ReplyMarkup(inlineKeyboard).
     Do(ctx.Ctx)
 
-// через FileURL
+// via FileURL
 msg, err := ctx.SendAudio(userID).
     FileURL("https://example.com/audio.mp3").
     Do(ctx.Ctx)
 
-// через FilePath
+// via FilePath
 msg, err := ctx.SendAudio(userID).
     FilePath("/tmp/audio.mp3").
     Do(ctx.Ctx)
 ```
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
 
 ---
 
@@ -220,24 +220,24 @@ msg, err := ctx.SendAudio(userID).
 
 `ctx.SendDocument(userID int64)` -> `*DocumentBuilder`
 
-Создаёт билдер для отправки документа.
+Creates a builder for sending a document.
 
-| Метод | Обязательный | Описание |
+| Method | Required | Description |
 |---|---|---|
-| `.FileID(id string)` | да* | Задаёт документ по file_id |
-| `.FileURL(url string)` | да* | Задаёт документ по URL |
-| `.FilePath(path string)` | да* | Задаёт документ по локальному пути (читает файл) |
-| `.Caption(caption string)` | нет | Устанавливает подпись к документу |
-| `.ParseMode(mode models.ParseMode)` | нет | Устанавливает режим парсинга для подписи |
-| `.ReplyMarkup(kb models.ReplyMarkup)` | нет | Добавляет клавиатуру или inline-разметку |
-| `.ReplyTo(messageID int)` | нет | Указывает ID сообщения, на которое нужно ответить |
-| `.Do(ctx context.Context)` | — | Отправляет документ. Возвращает `(*models.Message, error)` |
+| `.FileID(id string)` | yes* | Sets the document by file_id |
+| `.FileURL(url string)` | yes* | Sets the document by URL |
+| `.FilePath(path string)` | yes* | Sets the document by local path (reads the file) |
+| `.Caption(caption string)` | no | Sets the document caption |
+| `.ParseMode(mode models.ParseMode)` | no | Sets the parsing mode for the caption |
+| `.ReplyMarkup(kb models.ReplyMarkup)` | no | Adds a keyboard or inline markup |
+| `.ReplyTo(messageID int)` | no | Specifies the ID of the message to reply to |
+| `.Do(ctx context.Context)` | — | Sends the document. Returns `(*models.Message, error)` |
 
-> *Обязательно вызвать ровно один из трёх способов задания источника документа, иначе `.Do()` вернёт ошибку.
+> *Exactly one of the three methods for specifying the document source must be called, otherwise `.Do()` will return an error.
 
-**Пример:**
+**Example:**
 ```go
-// через FileID
+// via FileID
 msg, err := ctx.SendDocument(userID).
     FileID("BQACAgIAAxkD...").
     Caption("Подпись").
@@ -246,18 +246,18 @@ msg, err := ctx.SendDocument(userID).
     ReplyMarkup(inlineKeyboard).
     Do(ctx.Ctx)
 
-// через FileURL
+// via FileURL
 msg, err := ctx.SendDocument(userID).
     FileURL("https://example.com/doc.pdf").
     Do(ctx.Ctx)
 
-// через FilePath
+// via FilePath
 msg, err := ctx.SendDocument(userID).
     FilePath("/tmp/doc.pdf").
     Do(ctx.Ctx)
 ```
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
 
 ---
 
@@ -265,25 +265,25 @@ msg, err := ctx.SendDocument(userID).
 
 `ctx.SendVoice(userID int64)` -> `*VoiceBuilder`
 
-Создаёт билдер для отправки голосового сообщения.
+Creates a builder for sending a voice message.
 
-| Метод | Обязательный | Описание |
+| Method | Required | Description |
 |---|---|---|
-| `.FileID(id string)` | да* | Задаёт голосовое по file_id |
-| `.FileURL(url string)` | да* | Задаёт голосовое по URL |
-| `.FilePath(path string)` | да* | Задаёт голосовое по локальному пути (читает файл) |
-| `.Caption(caption string)` | нет | Устанавливает подпись к голосовому |
-| `.ParseMode(mode models.ParseMode)` | нет | Устанавливает режим парсинга для подписи |
-| `.ReplyMarkup(kb models.ReplyMarkup)` | нет | Добавляет клавиатуру или inline-разметку |
-| `.ReplyTo(messageID int)` | нет | Указывает ID сообщения, на которое нужно ответить |
-| `.Duration(seconds int)` | нет | Устанавливает длительность голосового в секундах |
-| `.Do(ctx context.Context)` | — | Отправляет голосовое. Возвращает `(*models.Message, error)` |
+| `.FileID(id string)` | yes* | Sets the voice message by file_id |
+| `.FileURL(url string)` | yes* | Sets the voice message by URL |
+| `.FilePath(path string)` | yes* | Sets the voice message by local path (reads the file) |
+| `.Caption(caption string)` | no | Sets the voice message caption |
+| `.ParseMode(mode models.ParseMode)` | no | Sets the parsing mode for the caption |
+| `.ReplyMarkup(kb models.ReplyMarkup)` | no | Adds a keyboard or inline markup |
+| `.ReplyTo(messageID int)` | no | Specifies the ID of the message to reply to |
+| `.Duration(seconds int)` | no | Sets the voice message duration in seconds |
+| `.Do(ctx context.Context)` | — | Sends the voice message. Returns `(*models.Message, error)` |
 
-> *Обязательно вызвать ровно один из трёх способов задания источника голосового, иначе `.Do()` вернёт ошибку.
+> *Exactly one of the three methods for specifying the voice source must be called, otherwise `.Do()` will return an error.
 
-**Пример:**
+**Example:**
 ```go
-// через FileID
+// via FileID
 msg, err := ctx.SendVoice(userID).
     FileID("AwACAgIAAxkD...").
     Caption("Подпись").
@@ -293,18 +293,18 @@ msg, err := ctx.SendVoice(userID).
     ReplyMarkup(inlineKeyboard).
     Do(ctx.Ctx)
 
-// через FileURL
+// via FileURL
 msg, err := ctx.SendVoice(userID).
     FileURL("https://example.com/voice.ogg").
     Do(ctx.Ctx)
 
-// через FilePath
+// via FilePath
 msg, err := ctx.SendVoice(userID).
     FilePath("/tmp/voice.ogg").
     Do(ctx.Ctx)
 ```
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
 
 ---
 
@@ -312,24 +312,24 @@ msg, err := ctx.SendVoice(userID).
 
 `ctx.SendVideoNote(userID int64)` -> `*VideoNoteBuilder`
 
-Создаёт билдер для отправки видео-заметки (кружок).
+Creates a builder for sending a video note (round video).
 
-| Метод | Обязательный | Описание |
+| Method | Required | Description |
 |---|---|---|
-| `.FileID(id string)` | да* | Задаёт видео-заметку по file_id |
-| `.FileURL(url string)` | да* | Задаёт видео-заметку по URL |
-| `.FilePath(path string)` | да* | Задаёт видео-заметку по локальному пути (читает файл) |
-| `.ReplyMarkup(kb models.ReplyMarkup)` | нет | Добавляет клавиатуру или inline-разметку |
-| `.ReplyTo(messageID int)` | нет | Указывает ID сообщения, на которое нужно ответить |
-| `.Duration(seconds int)` | нет | Устанавливает длительность видео-заметки в секундах |
-| `.Length(pixels int)` | нет | Устанавливает размер стороны квадрата в пикселях |
-| `.Do(ctx context.Context)` | — | Отправляет видео-заметку. Возвращает `(*models.Message, error)` |
+| `.FileID(id string)` | yes* | Sets the video note by file_id |
+| `.FileURL(url string)` | yes* | Sets the video note by URL |
+| `.FilePath(path string)` | yes* | Sets the video note by local path (reads the file) |
+| `.ReplyMarkup(kb models.ReplyMarkup)` | no | Adds a keyboard or inline markup |
+| `.ReplyTo(messageID int)` | no | Specifies the ID of the message to reply to |
+| `.Duration(seconds int)` | no | Sets the video note duration in seconds |
+| `.Length(pixels int)` | no | Sets the square side length in pixels |
+| `.Do(ctx context.Context)` | — | Sends the video note. Returns `(*models.Message, error)` |
 
-> *Обязательно вызвать ровно один из трёх способов задания источника видео-заметки, иначе `.Do()` вернёт ошибку.
+> *Exactly one of the three methods for specifying the video note source must be called, otherwise `.Do()` will return an error.
 
-**Пример:**
+**Example:**
 ```go
-// через FileID
+// via FileID
 msg, err := ctx.SendVideoNote(userID).
     FileID("DQACAgIAAxkD...").
     Duration(5).
@@ -338,38 +338,38 @@ msg, err := ctx.SendVideoNote(userID).
     ReplyMarkup(inlineKeyboard).
     Do(ctx.Ctx)
 
-// через FileURL
+// via FileURL
 msg, err := ctx.SendVideoNote(userID).
     FileURL("https://example.com/videonote.mp4").
     Do(ctx.Ctx)
 
-// через FilePath
+// via FilePath
 msg, err := ctx.SendVideoNote(userID).
     FilePath("/tmp/videonote.mp4").
     Do(ctx.Ctx)
 ```
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
 
 </details>
 
 ---
 
-## Редактирование
+## Editing
 
 ### EditText
 
 `ctx.EditText(userID int64, messageID int, text string)` -> `*EditTextBuilder`
 
-Создаёт билдер для редактирования существующего текстового сообщения.
+Creates a builder for editing an existing text message.
 
-| Метод | Обязательный | Описание |
+| Method | Required | Description |
 |---|---|---|
-| `.ParseMode(mode models.ParseMode)` | нет | Устанавливает режим парсинга (HTML, Markdown и т.п.) |
-| `.ReplyMarkup(kb models.ReplyMarkup)` | нет | Обновляет клавиатуру или inline-разметку |
-| `.Do(ctx context.Context)` | — | Отправляет запрос на редактирование. Возвращает `(*models.Message, error)` |
+| `.ParseMode(mode models.ParseMode)` | no | Sets the parsing mode (HTML, Markdown, etc.) |
+| `.ReplyMarkup(kb models.ReplyMarkup)` | no | Updates the keyboard or inline markup |
+| `.Do(ctx context.Context)` | — | Sends an edit request. Returns `(*models.Message, error)` |
 
-**Пример:**
+**Example:**
 ```go
 msg, err := ctx.EditText(userID, messageID, "Новый текст").
     ParseMode(models.ModeHTML).
@@ -377,7 +377,7 @@ msg, err := ctx.EditText(userID, messageID, "Новый текст").
     Do(ctx.Ctx)
 ```
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
 
 ---
 
@@ -385,15 +385,15 @@ msg, err := ctx.EditText(userID, messageID, "Новый текст").
 
 `ctx.EditCaption(userID int64, messageID int, caption string)` -> `*EditCaptionBuilder`
 
-Создаёт билдер для редактирования подписи у медиа-сообщения.
+Creates a builder for editing the caption of a media message.
 
-| Метод | Обязательный | Описание |
+| Method | Required | Description |
 |---|---|---|
-| `.ParseMode(mode models.ParseMode)` | нет | Устанавливает режим парсинга для подписи |
-| `.ReplyMarkup(kb models.ReplyMarkup)` | нет | Обновляет клавиатуру или inline-разметку |
-| `.Do(ctx context.Context)` | — | Отправляет запрос на редактирование подписи. Возвращает `(*models.Message, error)` |
+| `.ParseMode(mode models.ParseMode)` | no | Sets the parsing mode for the caption |
+| `.ReplyMarkup(kb models.ReplyMarkup)` | no | Updates the keyboard or inline markup |
+| `.Do(ctx context.Context)` | — | Sends an edit request for the caption. Returns `(*models.Message, error)` |
 
-**Пример:**
+**Example:**
 ```go
 msg, err := ctx.EditCaption(userID, messageID, "Новая подпись").
     ParseMode(models.ModeHTML).
@@ -401,7 +401,7 @@ msg, err := ctx.EditCaption(userID, messageID, "Новая подпись").
     Do(ctx.Ctx)
 ```
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
 
 ---
 
@@ -409,88 +409,88 @@ msg, err := ctx.EditCaption(userID, messageID, "Новая подпись").
 
 `ctx.EditMessageMedia(userID int64, messageID int)` -> `*EditMediaBuilder`
 
-Создаёт билдер для замены медиа в существующем сообщении.
+Creates a builder for replacing media in an existing message.
 
-| Метод | Обязательный | Описание |
+| Method | Required | Description |
 |---|---|---|
-| `.PhotoFileID(id, caption string)` | да* | Задаёт фото по file_id |
-| `.PhotoURL(url, caption string)` | да* | Задаёт фото по URL |
-| `.PhotoFromPath(path, caption string)` | да* | Задаёт фото по локальному пути (читает файл) |
-| `.VideoFileID(id, caption string)` | да* | Задаёт видео по file_id |
-| `.VideoURL(url, caption string)` | да* | Задаёт видео по URL |
-| `.VideoFromPath(path, caption string)` | да* | Задаёт видео по локальному пути (читает файл) |
-| `.DocumentFileID(id, caption string)` | да* | Задаёт документ по file_id |
-| `.DocumentURL(url, caption string)` | да* | Задаёт документ по URL |
-| `.DocumentFromPath(path, caption string)` | да* | Задаёт документ по локальному пути (читает файл) |
-| `.AudioFileID(id, caption string)` | да* | Задаёт аудио по file_id |
-| `.AudioURL(url, caption string)` | да* | Задаёт аудио по URL |
-| `.AudioFromPath(path, caption string)` | да* | Задаёт аудио по локальному пути (читает файл) |
-| `.ReplyMarkup(kb models.ReplyMarkup)` | нет | Обновляет клавиатуру или inline-разметку |
-| `.Do(ctx context.Context)` | — | Отправляет запрос на замену медиа. Возвращает `(*models.Message, error)` |
+| `.PhotoFileID(id, caption string)` | yes* | Sets the photo by file_id |
+| `.PhotoURL(url, caption string)` | yes* | Sets the photo by URL |
+| `.PhotoFromPath(path, caption string)` | yes* | Sets the photo by local path (reads the file) |
+| `.VideoFileID(id, caption string)` | yes* | Sets the video by file_id |
+| `.VideoURL(url, caption string)` | yes* | Sets the video by URL |
+| `.VideoFromPath(path, caption string)` | yes* | Sets the video by local path (reads the file) |
+| `.DocumentFileID(id, caption string)` | yes* | Sets the document by file_id |
+| `.DocumentURL(url, caption string)` | yes* | Sets the document by URL |
+| `.DocumentFromPath(path, caption string)` | yes* | Sets the document by local path (reads the file) |
+| `.AudioFileID(id, caption string)` | yes* | Sets the audio by file_id |
+| `.AudioURL(url, caption string)` | yes* | Sets the audio by URL |
+| `.AudioFromPath(path, caption string)` | yes* | Sets the audio by local path (reads the file) |
+| `.ReplyMarkup(kb models.ReplyMarkup)` | no | Updates the keyboard or inline markup |
+| `.Do(ctx context.Context)` | — | Sends a request to replace the media. Returns `(*models.Message, error)` |
 
-> *Обязательно вызвать ровно один метод установки медиа любого типа с одним из трёх способов задания источника, иначе `.Do()` вернёт ошибку.
+> *Exactly one media-setting method of any type with one of the three source methods must be called, otherwise `.Do()` will return an error.
 
-**Пример:**
+**Example:**
 ```go
-// через FileID (фото)
+// via FileID (фото)
 msg, err := ctx.EditMessageMedia(userID, messageID).
     PhotoFileID("AgACAgIAAxkD...", "Новая подпись").
     ReplyMarkup(newKeyboard).
     Do(ctx.Ctx)
 
-// через URL (видео)
+// via URL (video)
 msg, err := ctx.EditMessageMedia(userID, messageID).
     VideoURL("https://example.com/video.mp4", "Новое видео").
     Do(ctx.Ctx)
 
-// через локальный путь (документ)
+// via local path (document)
 msg, err := ctx.EditMessageMedia(userID, messageID).
     DocumentFromPath("/tmp/doc.pdf", "Новый документ").
     Do(ctx.Ctx)
 ```
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
 
 ---
 
-## Удаление
+## Deleting
 
 ### DeleteMessage
 
 `ctx.DeleteMessage(userID int64, messageID int)` -> `*DeleteBuilder`
 
-Создаёт билдер для удаления сообщения.
+Creates a builder for deleting a message.
 
-| Метод | Обязательный | Описание |
+| Method | Required | Description |
 |---|---|---|
-| `.Do(ctx context.Context)` | — | Удаляет сообщение. Возвращает `(bool, error)` |
+| `.Do(ctx context.Context)` | — | Deletes the message. Returns `(bool, error)` |
 
-**Пример:**
+**Example:**
 ```go
 ok, err := ctx.DeleteMessage(userID, messageID).
     Do(ctx.Ctx)
 ```
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
 
 ---
 
-## Клавиатуры
+## Keyboards
 
 ### NewInlineKeyboard
 
 `ctx.NewInlineKeyboard()` -> `*InlineKeyboardBuilder`
 
-Создаёт билдер для построения inline-клавиатуры.
+Creates a builder for constructing an inline keyboard.
 
-| Метод | Обязательный | Описание |
+| Method | Required | Description |
 |---|---|---|
-| `.Text(text, callbackData string)` | нет | Добавляет кнопку с текстом и callback-данными |
-| `.URL(text, url string)` | нет | Добавляет кнопку с текстом и HTTP-ссылкой |
-| `.Row()` | нет | Завершает текущий ряд кнопок и начинает новый |
-| `.Build()` | — | Собирает и возвращает `models.InlineKeyboardMarkup` |
+| `.Text(text, callbackData string)` | no | Adds a button with text and callback data |
+| `.URL(text, url string)` | no | Adds a button with text and an HTTP link |
+| `.Row()` | no | Finishes the current row of buttons and starts a new one |
+| `.Build()` | — | Builds and returns `models.InlineKeyboardMarkup` |
 
-**Пример:**
+**Example:**
 ```go
 kb := ctx.NewInlineKeyboard().
     Text("Кнопка 1", "data1").
@@ -499,10 +499,10 @@ kb := ctx.NewInlineKeyboard().
     URL("Перейти", "https://example.com").
     Build()
 
-// Затем kb можно передать в .ReplyMarkup(kb) любого билдера
+// Then kb can be passed to .ReplyMarkup(kb) of any builder
 ```
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
 
 ---
 
@@ -510,17 +510,17 @@ kb := ctx.NewInlineKeyboard().
 
 `ctx.NewReplyKeyboard()` -> `*ReplyKeyboardBuilder`
 
-Создаёт билдер для построения reply-клавиатуры.
+Creates a builder for constructing a reply keyboard.
 
-| Метод | Обязательный | Описание |
+| Method | Required | Description |
 |---|---|---|
-| `.Text(text string)` | нет | Добавляет кнопку с текстом |
-| `.Row()` | нет | Завершает текущий ряд кнопок и начинает новый |
-| `.Resize()` | нет | Включает автоматическое изменение размера клавиатуры |
-| `.OneTime()` | нет | Делает клавиатуру одноразовой (скрывается после нажатия) |
-| `.Build()` | — | Собирает и возвращает `models.ReplyKeyboardMarkup` |
+| `.Text(text string)` | no | Adds a button with text |
+| `.Row()` | no | Finishes the current row of buttons and starts a new one |
+| `.Resize()` | no | Enables automatic keyboard resizing |
+| `.OneTime()` | no | Makes the keyboard one-time (hidden after pressing) |
+| `.Build()` | — | Builds and returns `models.ReplyKeyboardMarkup` |
 
-**Пример:**
+**Example:**
 ```go
 kb := ctx.NewReplyKeyboard().
     Text("Кнопка 1").
@@ -531,10 +531,10 @@ kb := ctx.NewReplyKeyboard().
     OneTime().
     Build()
 
-// Затем kb можно передать в .ReplyMarkup(kb) любого билдера
+// Then kb can be passed to .ReplyMarkup(kb) of any builder
 ```
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
 
 ---
 
@@ -542,38 +542,38 @@ kb := ctx.NewReplyKeyboard().
 
 `ctx.RemoveKeyboard()` -> `models.ReplyKeyboardRemove`
 
-Возвращает объект для удаления текущей reply-клавиатуры.
+Returns an object for removing the current reply keyboard.
 
-**Пример:**
+**Example:**
 ```go
-// Передаётся в .ReplyMarkup для скрытия клавиатуры
+// Passed to .ReplyMarkup to hide the keyboard
 msg, err := ctx.SendText(userID, "Клавиатура скрыта").
     ReplyMarkup(ctx.RemoveKeyboard()).
     Do(ctx.Ctx)
 ```
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
 
 ---
 
-## Заявки на вступление
+## Join requests
 
 ### ApproveJoin
 
 `ctx.ApproveJoin(chatID, userID int64)` -> `*ApproveJoinBuilder`
 
-Одобряет заявку на вступление в чат.
+Approves a chat join request.
 
-| Метод | Обязательный | Описание |
+| Method | Required | Description |
 |---|---|---|
-| `.Do(ctx context.Context)` | — | Отправить. Возвращает `(bool, error)` |
+| `.Do(ctx context.Context)` | — | Sends the request. Returns `(bool, error)` |
 
-**Пример:**
+**Example:**
 ```go
 ctx.ApproveJoin(chatID, userID).Do(ctx.Ctx)
 ```
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
 
 ---
 
@@ -581,41 +581,41 @@ ctx.ApproveJoin(chatID, userID).Do(ctx.Ctx)
 
 `ctx.DeclineJoin(chatID, userID int64)` -> `*DeclineJoinBuilder`
 
-Отклоняет заявку на вступление в чат.
+Declines a chat join request.
 
-| Метод | Обязательный | Описание |
+| Method | Required | Description |
 |---|---|---|
-| `.Do(ctx context.Context)` | — | Отправить. Возвращает `(bool, error)` |
+| `.Do(ctx context.Context)` | — | Sends the request. Returns `(bool, error)` |
 
-**Пример:**
+**Example:**
 ```go
 ctx.DeclineJoin(chatID, userID).Do(ctx.Ctx)
 ```
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
 
 ---
 
-## Прочее
+## Miscellaneous
 
 ### SendChatAction
 
 `ctx.SendChatAction(userID int64, action models.ChatAction)` -> `*ChatActionBuilder`
 
-Отправляет статус действия бота в чате — например «печатает…» или «отправляет фото…».
+Sends the bot's action status in the chat — for example, “typing…” or “sending a photo…”.
 
-| Метод | Обязательный | Описание |
+| Method | Required | Description |
 |---|---|---|
-| `.Do(ctx context.Context)` | — | Отправить. Возвращает `(bool, error)` |
+| `.Do(ctx context.Context)` | — | Sends the request. Returns `(bool, error)` |
 
-**Пример:**
+**Example:**
 ```go
 ctx.SendChatAction(userID, models.ChatActionTyping).Do(ctx.Ctx)
 ```
 
-Статус действия виден пользователю ограниченное время (около 5 секунд), затем гаснет сам.
+The action status is visible to the user for a limited time (about 5 seconds), then disappears automatically.
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
 
 ---
 
@@ -623,39 +623,39 @@ ctx.SendChatAction(userID, models.ChatActionTyping).Do(ctx.Ctx)
 
 `ctx.AnswerCallback()` -> `*AnswerCallbackBuilder`
 
-Отвечает на нажатие inline-кнопки — убирает индикатор загрузки у кнопки, опционально показывает всплывающее уведомление.
+Responds to an inline button press — removes the loading indicator from the button and optionally shows a popup notification.
 
-| Метод | Обязательный | Описание |
+| Method | Required | Description |
 |---|---|---|
-| `.Text(text string)` | нет | Текст всплывающего уведомления |
-| `.ShowAlert()` | нет | Показать текст как модальное окно, а не мелкое уведомление сверху |
-| `.Do(ctx context.Context)` | — | Отправить. Возвращает `(bool, error)` |
+| `.Text(text string)` | no | Popup notification text |
+| `.ShowAlert()` | no | Shows the text as a modal window instead of a small notification at the top |
+| `.Do(ctx context.Context)` | — | Sends the request. Returns `(bool, error)` |
 
-**Пример:**
+**Example:**
 ```go
-// просто убрать индикатор загрузки
+// simply remove the loading indicator
 ctx.AnswerCallback().Do(ctx.Ctx)
 
-// с текстом-уведомлением
+// with a notification text
 ctx.AnswerCallback().Text("Готово!").Do(ctx.Ctx)
 
-// с модальным окном
+// with a modal window
 ctx.AnswerCallback().Text("Ошибка!").ShowAlert().Do(ctx.Ctx)
 ```
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
 
 ---
 
-## Роутинг
+## Routing
 
 ### Command
 
 `ctx.Command(cmd string, h Handler)`
 
-Регистрирует хендлер на точное совпадение текста сообщения с командой.
+Registers a handler for an exact match between the message text and the command.
 
-**Пример:**
+**Example:**
 ```go
 b.Command("/start", func(ctx *gogrammy.Context) {
     userID := c.Update.Message.From.ID
@@ -663,7 +663,7 @@ b.Command("/start", func(ctx *gogrammy.Context) {
 })
 ```
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
 
 ---
 
@@ -671,9 +671,9 @@ b.Command("/start", func(ctx *gogrammy.Context) {
 
 `ctx.On(eventType string, h Handler)`
 
-Регистрирует хендлер по типу входящего события (апдейта). Поддерживаемые `eventType`: `message`, `edited_message`, `channel_post`, `edited_channel_post`, `callback`, `inline_query`, `chosen_inline_result`, `poll`, `poll_answer`, `my_chat_member`, `chat_member`, `join_request`, `chat_boost`, `removed_chat_boost` и другие.
+Registers a handler by incoming event (update) type. Supported `eventType` values: `message`, `edited_message`, `channel_post`, `edited_channel_post`, `callback`, `inline_query`, `chosen_inline_result`, `poll`, `poll_answer`, `my_chat_member`, `chat_member`, `join_request`, `chat_boost`, `removed_chat_boost` и другие.
 
-**Пример:**
+**Example:**
 ```go
 b.On("callback", func(ctx *gogrammy.Context) {
     data := ctx.Update.CallbackQuery.Data
@@ -681,7 +681,7 @@ b.On("callback", func(ctx *gogrammy.Context) {
 })
 ```
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
 
 ---
 
@@ -689,9 +689,9 @@ b.On("callback", func(ctx *gogrammy.Context) {
 
 `ctx.OnCallback(prefix string, h Handler)`
 
-Регистрирует хендлер на callback-запросы, чей `callback_data` начинается с указанного префикса.
+Registers a handler for callback queries whose `callback_data` starts with the specified prefix.
 
-**Пример:**
+**Example:**
 ```go
 b.OnCallback("product_", func(ctx *gogrammy.Context) {
     data := ctx.Update.CallbackQuery.Data // например "product_42"
@@ -699,7 +699,7 @@ b.OnCallback("product_", func(ctx *gogrammy.Context) {
 })
 ```
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
 
 ---
 
@@ -707,11 +707,11 @@ b.OnCallback("product_", func(ctx *gogrammy.Context) {
 
 `ctx.Start(ctx context.Context)`
 
-Запускает бота — начинает получать и обрабатывать входящие апдейты. Блокирующий вызов, выполняется до отмены переданного `context.Context`.
+Starts the bot — begins receiving and processing incoming updates. This is a blocking call that runs until the provided `context.Context` is cancelled.
 
-**Пример:**
+**Example:**
 ```go
 b.Start(context.Background())
 ```
 
-[Наверх](#api-reference)
+[Back to top](#api-reference)
