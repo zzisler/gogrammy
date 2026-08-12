@@ -13,7 +13,6 @@ func NewInlineKeyboard() *InlineKeyboardBuilder {
 	return &InlineKeyboardBuilder{}
 }
 
-// func (k *InlineKeyboardBuilder) Text(text, callbackData string) *ButtonStyler {
 func (k *InlineKeyboardBuilder) Text(text, callbackData string) *InlineKeyboardBuilder {
 	k.cur = append(k.cur, models.InlineKeyboardButton{
 		Text:         text,
