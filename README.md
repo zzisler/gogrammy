@@ -1,105 +1,114 @@
+<div align="center">
+
+**English** · [Русский](README.ru.md)
+
+[API Reference](./API.md) · [Examples](./examples)
+
+</div>
+
+---
+
 # gogrammy
 
 A simple and clean Telegram bot wrapper for Go, inspired by [Grammy](https://grammy.dev).
 
-## Installation
+A fluent builder-API wrapper over [go-telegram/bot](https://github.com/go-telegram/bot) — no more bulky `&Param{}` structs.
+
+```go
+// before (go-telegram/bot directly)
+b.SendMessage(ctx, &bot.SendMessageParams{
+    ChatID:    userID,
+    Text:      "Hello!",
+    ParseMode: models.ParseModeHTML,
+})
+
+// with gogrammy
+ctx.SendText(userID, "Hello!").
+    ParseMode(models.ParseModeHTML).
+    Do(ctx.Ctx)
+```
+
+## Why gogrammy
+
+- **Builders instead of param structs.** Every content type (text, photo, video, document, audio, voice, video note) has its own builder with a chainable API. Your IDE's autocomplete only shows what's actually valid for that type.
+- **One `Context` type for everything.** No juggling between `Client` and `Context` — sending, editing, and keyboards all live in one place.
+- **Event-based routing.** `Command`, `On`, `OnCallback` — register handlers without writing your own dispatcher, built on top of `go-telegram/bot`.
+- **Nothing reinvented.** gogrammy doesn't replace the HTTP client or the Telegram API layer — it uses the stable `go-telegram/bot` under the hood and adds a convenience layer on top.
+
+## Install
 
 ```bash
 go get github.com/zzisler/gogrammy
 ```
 
-## Usage
+## Quick start
 
 ```go
 package main
 
 import (
     "context"
+    "os"
+
     "github.com/zzisler/gogrammy"
 )
 
 func main() {
-    app, err := gogrammy.New("YOUR_TOKEN")
+    b, err := gogrammy.New(os.Getenv("BOT_TOKEN"))
     if err != nil {
         panic(err)
     }
 
-    app.Command("/start", func(c *gogrammy.Context) {
-        c.Send(c.UserID(), "Привет!", nil)
+    b.Command("/start", func(c *gogrammy.Context) {
+        userID := c.Update.Message.From.ID
+        c.SendText(userID, "Hi! I'm a gogrammy bot 👋").Do(c.Ctx)
     })
 
-    app.Start(context.Background())
+    b.Start(context.Background())
 }
 ```
 
-## Methods
+More examples in [`examples/`](./examples).
 
-### App
-- `New(token, proxy?)` — create bot instance
-- `Start(ctx)` — start bot
+## What's included
 
-### Commands
-- `Command(cmd, handler)` — any chat command
-- `PrivateCommand(cmd, handler)` — private chat only
-- `GroupCommand(cmd, handler)` — group/supergroup only
+| Category | Methods |
+|---|---|
+| Sending | `SendText`, `SendPhoto`, `SendVideo`, `SendDocument`, `SendAudio`, `SendVoice`, `SendVideoNote` |
+| Editing | `EditText`, `EditCaption`, `EditMedia` |
+| Deleting | `DeleteMessage` |
+| Keyboards | `NewInlineKeyboard`, `NewReplyKeyboard`, `RemoveKeyboard` |
+| Join requests | `ApproveJoin`, `DeclineJoin` |
+| Other | `SendChatAction`, `AnswerCallback` |
+| Routing | `Command`, `On`, `OnCallback`, `Start` |
 
-### Events
-- `On(eventType, handler)` — listen to events: `message`, `callback`, `join_request`, `my_chat_member`, `business_message`
-- `OnCallback(prefix, handler)` — listen to callback with prefix
+Full method reference with all optional parameters and examples: [`API.md`](./API.md).
 
-### Messages
-- `Send(chatID, text, params)` — send a message, returns `(*models.Message, error)`
-- `Edit(text, params)` — edit current message
-- `EditMessage(messageID, text, params)` — edit specific message by ID
-- `Delete()` — delete current message
-- `DeleteMessage(messageID)` — delete specific message by ID
-- `Forward(fromChatID, messageID)` — forward specific message
-- `Copy(fromChatID, messageID, params)` — copy specific message
-- `AnswerCallback(text?)` — answer callback query
+## Working with files
 
-### Media
-- `SendPhoto(chatID, url, params)` — send photo by URL
-- `SendAudio(chatID, params)` — send audio file or cached audio by file_id
+Every media builder accepts a source in three ways:
 
 ```go
-// new file
-c.SendAudio(c.UserID(), &gogrammy.AudioParams{
-    Title:     "Track Title",
-    Performer: "Artist",
-    Filename:  "track.mp3",
-    TrackData: data,
-    CoverData: cover,
-})
-
-// cached (by Telegram file_id)
-c.SendAudio(c.UserID(), &gogrammy.AudioParams{
-    Title:     "Track Title",
-    Performer: "Artist",
-    FileID:    "BQACAgIAAxkB...",
-})
+ctx.SendPhoto(userID).FileID("AAA...")        // file already on Telegram's servers
+ctx.SendPhoto(userID).FileURL("https://...")  // direct link
+ctx.SendPhoto(userID).FilePath("./photo.png") // upload from disk
 ```
 
-### Context helpers
-- `c.UserID()` — `c.Update.Message.From.ID`
-- `c.FirstName()` — `c.Update.Message.From.FirstName`
-- `c.ChatID()` — `c.Update.Message.Chat.ID`
-- `c.Text()` — `c.Update.Message.Text`
+## Keyboards
 
-### Admin
-- `Ban(chatID, userID, params)` — ban user
-- `Unban(chatID, userID)` — unban user
-- `BanChat(chatID, senderChatID)` — ban sender chat
-- `UnbanChat(chatID, senderChatID)` — unban sender chat
-- `GetProfilePhoto(userID, params)` — get user profile photos
+```go
+kb := ctx.NewInlineKeyboard().
+    Text("Button 1", "btn1").
+    Row().
+    URL("Website", "https://example.com").
+    Build()
 
-### Join Requests
-- `ApproveJoin(chatID, userID)` — approve join request
-- `DeclineJoin(chatID, userID)` — decline join request
+ctx.SendText(userID, "Choose:").ReplyMarkup(kb).Do(ctx.Ctx)
+```
 
-### Keyboards
-- `Keyboard(rows...)` — create inline keyboard
-- `Row(buttons...)` — create keyboard row
-- `Button(text, data)` — create inline button
+## Status
+
+Actively developed. Core functionality (sending/editing/deleting all content types, keyboards, routing, join requests) is implemented and tested against a live bot. Feedback and issues are welcome.
 
 ## License
 
