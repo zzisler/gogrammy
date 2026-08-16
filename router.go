@@ -39,6 +39,8 @@ func (c *Context) On(eventType string, h Handler) {
 		matchFunc = func(u *models.Update) bool { return u.MessageReaction != nil }
 	case "message_reaction_count":
 		matchFunc = func(u *models.Update) bool { return u.MessageReactionCount != nil }
+	case "managed_bot":
+		matchFunc = func(u *models.Update) bool { return u.ManagedBot != nil }
 	case "inline_query":
 		matchFunc = func(u *models.Update) bool { return u.InlineQuery != nil }
 	case "chosen_inline_result":
