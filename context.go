@@ -82,6 +82,14 @@ func (c *Context) RemoveKeyboard() models.ReplyKeyboardRemove {
 	return models.ReplyKeyboardRemove{RemoveKeyboard: true}
 }
 
+func (c *Context) ApproveJoin(chatID, userID int64) *builder.ApproveJoinBuilder {
+	return builder.NewApproveJoinBuilder(c.Bot, chatID, userID)
+}
+
+func (c *Context) DeclineJoin(chatID, userID int64) *builder.DeclineJoinBuilder {
+	return builder.NewDeclineJoinBuilder(c.Bot, chatID, userID)
+}
+
 func (c *Context) SendChatAction(userID int64, action models.ChatAction) *builder.ChatActionBuilder {
 	return builder.NewChatActionBuilder(c.Bot, userID, action)
 }
