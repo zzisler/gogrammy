@@ -56,7 +56,14 @@ func New(token string, opts ...ClientOption) (*Context, error) {
 }
 
 func (c *Context) UserID() int64 {
-	return c.Update.Message.From.ID
+	switch {
+	case c.Update.CallbackQuery != nil:
+		return c.Update.CallbackQuery.From.ID
+	case c.Update.Message != nil:
+		return c.Update.Message.From.ID
+	default:
+		return 0
+	}
 }
 
 func (c *Context) AnswerCallback() *builder.AnswerCallbackBuilder {
