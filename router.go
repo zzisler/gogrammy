@@ -11,8 +11,8 @@ import (
 type Handler func(*Context)
 
 func (b *Bot) handle(h Handler) bot.HandlerFunc {
-	return func(ctx context.Context, b *bot.Bot, update *models.Update) {
-		h(&Context{Update: update, Ctx: ctx})
+	return func(ctx context.Context, bot *bot.Bot, update *models.Update) {
+		h(&Context{bot: bot, Update: update, Ctx: ctx})
 	}
 }
 
