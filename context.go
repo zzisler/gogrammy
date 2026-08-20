@@ -209,6 +209,10 @@ func (c *Context) API() *bot.Bot {
 	return c.bot
 }
 
+func (b *Bot) API() *bot.Bot {
+	return b.api
+}
+
 // --SEND--
 
 func (c *Context) SendText(userID int64, text string) *builder.TextBuilder {
