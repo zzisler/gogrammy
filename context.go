@@ -61,6 +61,19 @@ func (c *Context) UserID() int64 {
 		return c.Update.CallbackQuery.From.ID
 	case c.Update.Message != nil:
 		return c.Update.Message.From.ID
+	case c.Update.EditedMessage != nil:
+		return c.Update.EditedMessage.From.ID
+	default:
+		return 0
+	}
+}
+
+func (c *Context) ChatID() int64 {
+	switch {
+	case c.Update.Message != nil:
+		return c.Update.Message.Chat.ID
+	case c.Update.EditedMessage != nil:
+		return c.Update.EditedMessage.Chat.ID
 	default:
 		return 0
 	}
