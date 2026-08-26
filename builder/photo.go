@@ -46,6 +46,11 @@ func (b *PhotoBuilder) FilePath(path string) *PhotoBuilder {
 	return b
 }
 
+func (b *PhotoBuilder) FileBytes(data []byte, filename string) *PhotoBuilder {
+	b.photo = &models.InputFileUpload{Filename: filename, Data: bytes.NewReader(data)}
+	return b
+}
+
 func (b *PhotoBuilder) Caption(caption string) *PhotoBuilder {
 	b.caption = caption
 	return b
