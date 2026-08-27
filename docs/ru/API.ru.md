@@ -82,6 +82,7 @@ msg, err := ctx.SendText(userID, "Привет!").
 | `.FileID(id string)` | да* | Задаёт фото по file_id |
 | `.FileURL(url string)` | да* | Задаёт фото по URL |
 | `.FilePath(path string)` | да* | Задаёт фото по локальному пути (читает файл) |
+| `.FileBytes(data []byte, filename string)` | да* | Устанавливает фото из байтов в памяти |
 | `.Caption(caption string)` | нет | Устанавливает подпись к фото |
 | `.ParseMode(mode models.ParseMode)` | нет | Устанавливает режим парсинга для подписи |
 | `.ReplyMarkup(kb models.ReplyMarkup)` | нет | Добавляет клавиатуру или inline-разметку |

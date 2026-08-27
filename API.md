@@ -82,6 +82,7 @@ Creates a builder for sending a photo.
 | `.FileID(id string)` | yes* | Sets the photo by file_id |
 | `.FileURL(url string)` | yes* | Sets the photo by URL |
 | `.FilePath(path string)` | yes* | Sets the photo by local path (reads the file) |
+| `.FileBytes(data []byte, filename string)` | yes* | Sets the photo from bytes in memory |
 | `.Caption(caption string)` | no | Sets the photo caption |
 | `.ParseMode(mode models.ParseMode)` | no | Sets the parsing mode for the caption |
 | `.ReplyMarkup(kb models.ReplyMarkup)` | no | Adds a keyboard or inline markup |
