@@ -23,12 +23,19 @@ type Context struct {
 type ClientOption func(*clientConfig)
 
 type clientConfig struct {
-	proxyURL string
+	proxyURL    string
+	middlewares []bot.Middleware
 }
 
 func WithProxy(proxyURL string) ClientOption {
 	return func(c *clientConfig) {
 		c.proxyURL = proxyURL
+	}
+}
+
+func WithMiddlewares(mws ...bot.Middleware) ClientOption {
+	return func(c *clientConfig) {
+		c.middlewares = append(c.middlewares, mws...)
 	}
 }
 
@@ -51,7 +58,7 @@ func New(token string, opts ...ClientOption) (*Bot, error) {
 		}
 	}
 
-	b, err := bot.New(token, bot.WithHTTPClient(0, httpClient))
+	b, err := bot.New(token, bot.WithHTTPClient(0, httpClient), bot.WithMiddlewares(cfg.middlewares...))
 	if err != nil {
 		return nil, err
 	}
